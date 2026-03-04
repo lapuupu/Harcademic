@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Harcademic Tutoring</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #E8DFC0;
+      --bg-light:  #F3EDD8;
+      --bg-card:   #EDE5CB;
+      --border:    #D5CBAB;
+      --dark:      #3A2015;
+      --mid:       #63423F;
+      --muted:     #A0826A;
+      --blue-deep: #425196;
+      --blue-mid:  #7682DC;
+      --blue-soft: #ACBADD;
+      --blue-pale: #E4CAEE;
+      --red:       #D03433;
+      --red-dark:  #661609;
+      --teal:      #677C75;
+      --teal-light:#8D9C97;
+      --teal-pale: #D5E0DC;
+      --yellow:    #D5C86E;
+      --salmon:    #E27A61;
+      --slate:     #646681;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(232,223,192,0.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 64px;
+    }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--dark); text-decoration: none; }
+    .nav-logo span { color: var(--blue-deep); }
+    .nav-tabs { display: flex; list-style: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; padding: 4px; gap: 0; }
+    .nav-tabs li button { background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 500; color: var(--muted); padding: 0.45rem 1.2rem; border-radius: 100px; transition: all 0.2s; }
+    .nav-tabs li button:hover { color: var(--dark); }
+    .nav-tabs li button.active { background: var(--blue-deep); color: #fff; }
+    .nav-cta { background: var(--red); color: #fff; font-size: 0.83rem; font-weight: 500; padding: 0.55rem 1.3rem; border-radius: 100px; text-decoration: none; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+    /* PAGE SYSTEM */
+    .page { display: none; min-height: 100vh; padding-top: 64px; }
+    .page.active { display: block; }
+
+    /* SHARED */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; }
+    .section-tag { display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--teal); background: var(--teal-pale); padding: 0.3rem 0.85rem; border-radius: 100px; margin-bottom: 1rem; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 3.5vw, 2.8rem); letter-spacing: -0.03em; line-height: 1.1; color: var(--dark); margin-bottom: 0.85rem; }
+    h2 em { font-style: italic; color: var(--blue-deep); }
+    .lead { font-size: 1.05rem; font-weight: 300; line-height: 1.75; color: var(--mid); max-width: 520px; }
+    .btn-solid { background: var(--dark); color: #fff; padding: 0.8rem 1.9rem; border-radius: 100px; font-size: 0.88rem; font-weight: 500; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; font-family: 'DM Sans', sans-serif; }
+    .btn-solid:hover { background: var(--mid); transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--mid); padding: 0.8rem 1.9rem; border-radius: 100px; font-size: 0.88rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: border-color 0.2s, color 0.2s, transform 0.15s; font-family: 'DM Sans', sans-serif; }
+    .btn-outline:hover { border-color: var(--dark); color: var(--dark); transform: translateY(-2px); }
+
+    /* HOME HERO */
+    .hero { min-height: calc(100vh - 64px); display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 5rem; padding: 5rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
+    .hero-bg { position: fixed; top:10%; right:5%; width:500px; height:500px; background: radial-gradient(circle, rgba(118,130,220,0.15) 0%, transparent 65%); pointer-events: none; z-index: 0; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); background: var(--teal-pale); padding: 0.35rem 1rem; border-radius: 100px; margin-bottom: 1.75rem; animation: fadeUp 0.5s ease both; }
+    .hero-eyebrow::before { content:''; width:6px; height:6px; background: var(--teal); border-radius:50%; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(3rem,5vw,4.8rem); line-height:1.05; letter-spacing:-0.03em; color: var(--dark); margin-bottom:1.5rem; animation: fadeUp 0.5s 0.08s ease both; }
+    .hero h1 em { font-style:italic; color: var(--blue-deep); }
+    .hero .lead { margin-bottom: 2.5rem; animation: fadeUp 0.5s 0.16s ease both; }
+    .hero-actions { display: flex; align-items: center; gap: 1.25rem; animation: fadeUp 0.5s 0.24s ease both; }
+    .hero-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; box-shadow: 0 8px 48px rgba(58,32,21,0.08); position: relative; z-index: 1; animation: fadeIn 0.7s 0.2s ease both; }
+    .hc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .hc-title { font-weight: 600; font-size: 0.9rem; }
+    .hc-live { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; font-weight: 600; color: var(--teal); background: var(--teal-pale); padding: 0.3rem 0.75rem; border-radius: 100px; }
+    .hc-live::before { content:''; width:6px; height:6px; background: var(--teal); border-radius:50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .subj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    .subj-chip { display: flex; align-items: center; gap: 0.7rem; padding: 0.8rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: background 0.2s, transform 0.15s, border-color 0.2s; }
+    .subj-chip:hover { background: var(--bg-card); border-color: var(--blue-soft); transform: translateY(-2px); }
+    .chip-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+    .chip-name { font-size: 0.82rem; font-weight: 500; }
+    .chip-level { font-size: 0.7rem; color: var(--muted); }
+    .hero-float { position: absolute; bottom: 3rem; right: 1rem; background: var(--blue-deep); color: #fff; border-radius: 16px; padding: 1rem 1.25rem; box-shadow: 0 8px 32px rgba(66,81,150,0.35); animation: float 4s ease-in-out infinite; z-index: 2; }
+    .float-num { font-family: 'DM Serif Display', serif; font-size: 1.9rem; line-height:1; }
+    .float-lbl { font-size: 0.72rem; opacity: 0.75; margin-top: 0.15rem; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* STATS */
+    .stats { background: var(--dark); color: var(--bg); padding: 2.5rem; }
+    .stats-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 2.8rem; color: var(--yellow); line-height: 1; }
+    .stat-lbl { font-size: 0.82rem; color: rgba(232,223,192,0.5); margin-top: 0.35rem; }
+
+    /* HOW */
+    .how { padding: 6rem 2.5rem; }
+    .how-grid { max-width: 1200px; margin: 2.5rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .how-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; transition: transform 0.2s, box-shadow 0.2s; }
+    .how-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(58,32,21,0.08); }
+    .how-num { font-family: 'DM Serif Display', serif; font-size: 3rem; color: var(--blue-soft); line-height: 1; margin-bottom: 1rem; }
+    .how-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .how-desc { font-size: 0.85rem; color: var(--mid); line-height: 1.65; }
+
+    /* SUBJECTS */
+    .subjects { padding: 2rem 2.5rem 6rem; background: var(--bg-card); }
+    .subj-cards { max-width: 1200px; margin: 2.5rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .sc { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+    .sc:hover { transform: translateY(-4px); box-shadow: 0 10px 36px rgba(58,32,21,0.09); }
+    .sc-emoji { font-size: 1.8rem; margin-bottom: 1rem; }
+    .sc-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.35rem; }
+    .sc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .sc-footer { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .sc-count { font-size: 0.75rem; color: var(--muted); }
+    .sc-tag { font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 100px; background: var(--blue-pale); color: var(--blue-deep); }
+
+    /* TESTIMONIALS */
+    .testimonials { padding: 6rem 2.5rem; }
+    .quotes-grid { max-width: 1200px; margin: 2.5rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .qc { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem; transition: transform 0.2s; }
+    .qc:hover { transform: translateY(-3px); }
+    .qc-stars { color: var(--yellow); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 1rem; }
+    .qc-text { font-size: 0.88rem; line-height: 1.7; color: var(--mid); font-style: italic; margin-bottom: 1.5rem; }
+    .qc-author { display: flex; align-items: center; gap: 0.75rem; }
+    .qc-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.88rem; font-weight:600; color:#fff; flex-shrink:0; }
+    .av-blue { background: var(--blue-deep); } .av-red { background: var(--red); } .av-teal { background: var(--teal); }
+    .qc-name { font-size: 0.84rem; font-weight: 600; }
+    .qc-grade { font-size: 0.73rem; color: var(--muted); }
+
+    /* CTA BAND */
+    .cta-band { background: var(--blue-deep); color: #fff; padding: 5rem 2.5rem; text-align: center; }
+    .cta-band h2 { color: #fff; max-width: 600px; margin: 0 auto 1rem; }
+    .cta-band .lead { color: rgba(255,255,255,0.65); margin: 0 auto 2.5rem; }
+    .cta-actions { display: flex; justify-content: center; gap: 1rem; }
+    .btn-light { background: var(--bg); color: var(--dark); padding: 0.8rem 2rem; border-radius: 100px; font-size: 0.88rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: background 0.2s, transform 0.15s; font-family: 'DM Sans', sans-serif; }
+    .btn-light:hover { background: var(--bg-light); transform: translateY(-2px); }
+    .btn-ghost-w { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); padding: 0.8rem 2rem; border-radius: 100px; font-size: 0.88rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: border-color 0.2s, transform 0.15s; font-family: 'DM Sans', sans-serif; }
+    .btn-ghost-w:hover { border-color: rgba(255,255,255,0.7); transform: translateY(-2px); }
+
+    /* NEWS */
+    .news-hero { background: var(--dark); color: var(--bg); padding: 4rem 2.5rem 3rem; }
+    .news-hero-inner { max-width: 1200px; margin: 0 auto; }
+    .news-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem,4vw,4rem); letter-spacing: -0.03em; margin-top: 0.75rem; margin-bottom: 0.75rem; }
+    .news-hero h1 em { font-style: italic; color: var(--yellow); }
+    .news-hero .lead { color: rgba(232,223,192,0.6); }
+    .news-grid { max-width: 1200px; margin: 3rem auto; padding: 0 2.5rem; display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+    .article-featured { background: var(--bg-light); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .article-featured:hover { transform: translateY(-4px); box-shadow: 0 12px 48px rgba(58,32,21,0.1); }
+    .af-banner { height: 200px; background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 100%); display: flex; align-items: flex-end; padding: 1.5rem; position: relative; overflow: hidden; }
+    .af-banner::before { content:''; position:absolute; top:-30%; right:-10%; width:250px; height:250px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 65%); }
+    .af-category { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; background: rgba(255,255,255,0.2); padding: 0.3rem 0.7rem; border-radius: 100px; }
+    .af-body { padding: 1.75rem; }
+    .af-date { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .af-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .af-excerpt { font-size: 0.85rem; color: var(--mid); line-height: 1.65; }
+    .af-footer { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .af-author { font-size: 0.78rem; color: var(--muted); }
+    .af-read { font-size: 0.78rem; font-weight: 600; color: var(--blue-deep); }
+    .news-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+    .article-small { background: var(--bg-light); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .article-small:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(58,32,21,0.07); }
+    .as-cat { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .cat-red { color: var(--red); } .cat-teal { color: var(--teal); } .cat-blue { color: var(--blue-deep); }
+    .as-title { font-family: 'DM Serif Display', serif; font-size: 1rem; line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+    .as-date { font-size: 0.72rem; color: var(--muted); }
+    .more-articles { max-width: 1200px; margin: 0 auto 4rem; padding: 0 2.5rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .article-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .article-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(58,32,21,0.08); }
+    .ac-color-bar { height: 4px; border-radius: 100px; margin-bottom: 1.25rem; }
+    .bar-blue { background: var(--blue-mid); } .bar-red { background: var(--red); } .bar-teal { background: var(--teal); }
+    .ac-cat { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .ac-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 0.6rem; }
+    .ac-excerpt { font-size: 0.82rem; color: var(--mid); line-height: 1.6; }
+    .ac-footer { margin-top: 1rem; font-size: 0.72rem; color: var(--muted); }
+
+    /* RESOURCES */
+    .resources-hero { background: var(--teal); color: #fff; padding: 4rem 2.5rem 3rem; }
+    .resources-hero-inner { max-width: 1200px; margin: 0 auto; }
+    .resources-hero .section-tag { background: rgba(255,255,255,0.15); color: #fff; }
+    .resources-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem,4vw,3.8rem); letter-spacing: -0.03em; margin-top: 0.75rem; margin-bottom: 0.75rem; color: #fff; }
+    .resources-hero h1 em { font-style: italic; color: var(--yellow); }
+    .resources-hero .lead { color: rgba(255,255,255,0.7); }
+    .resources-filter { max-width: 1200px; margin: 2.5rem auto 0; padding: 0 2.5rem; display: flex; gap: 0.65rem; flex-wrap: wrap; }
+    .filter-btn { background: var(--bg-light); border: 1px solid var(--border); border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; color: var(--mid); padding: 0.45rem 1.1rem; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover, .filter-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .resources-grid { max-width: 1200px; margin: 1.75rem auto; padding: 0 2.5rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .res-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+    .res-card:hover { transform: translateY(-4px); box-shadow: 0 10px 36px rgba(58,32,21,0.09); }
+    .res-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:1.1rem; }
+    .ri-blue { background: var(--blue-pale); } .ri-teal { background: var(--teal-pale); } .ri-yellow { background: rgba(213,200,110,0.25); } .ri-red { background: rgba(208,52,51,0.1); }
+    .res-type { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
+    .res-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .res-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.6; }
+    .res-footer { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .res-subj { font-size: 0.72rem; font-weight: 500; background: var(--bg-card); color: var(--mid); padding: 0.25rem 0.7rem; border-radius: 100px; }
+    .res-action { font-size: 0.78rem; font-weight: 600; color: var(--teal); text-decoration: none; }
+    .study-tips { background: var(--dark); color: var(--bg); padding: 5rem 2.5rem; }
+    .study-tips-inner { max-width: 1200px; margin: 0 auto; }
+    .study-tips h2 { color: var(--bg); }
+    .study-tips h2 em { color: var(--yellow); }
+    .tips-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-top: 2.5rem; }
+    .tip-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.5rem; }
+    .tip-icon { font-size: 1.5rem; margin-bottom: 0.85rem; }
+    .tip-title { font-weight: 600; font-size: 0.88rem; color: var(--bg); margin-bottom: 0.4rem; }
+    .tip-desc { font-size: 0.8rem; color: rgba(232,223,192,0.5); line-height: 1.6; }
+
+    /* ABOUT */
+    .about-hero { background: var(--bg-light); padding: 5rem 2.5rem 4rem; border-bottom: 1px solid var(--border); }
+    .about-hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .about-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem,4vw,4rem); letter-spacing: -0.03em; margin-top: 0.75rem; margin-bottom: 1rem; }
+    .about-hero h1 em { font-style: italic; color: var(--red); }
+    .about-visual { background: var(--bg); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; box-shadow: 0 8px 48px rgba(58,32,21,0.07); }
+    .mission-stat { text-align: center; padding: 1.5rem; border-bottom: 1px solid var(--border); }
+    .mission-stat:last-child { border-bottom: none; }
+    .ms-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--blue-deep); line-height: 1; }
+    .ms-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+    .values { padding: 6rem 2.5rem; background: var(--bg-card); }
+    .values-inner { max-width: 1200px; margin: 0 auto; }
+    .values-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.25rem; margin-top: 2.5rem; }
+    .val-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; }
+    .val-accent { width:40px; height:4px; border-radius:100px; margin-bottom:1.25rem; }
+    .va-blue { background: var(--blue-deep); } .va-red { background: var(--red); } .va-teal { background: var(--teal); } .va-yellow { background: var(--yellow); }
+    .val-title { font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; }
+    .val-desc { font-size: 0.85rem; color: var(--mid); line-height: 1.65; }
+    .team { padding: 6rem 2.5rem; }
+    .team-inner { max-width: 1200px; margin: 0 auto; }
+    .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-top: 2.5rem; }
+    .member-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; text-align: center; transition: transform 0.2s; }
+    .member-card:hover { transform: translateY(-4px); }
+    .member-avatar { width:64px; height:64px; border-radius:50%; margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-family:'DM Serif Display',serif; font-size:1.5rem; color:#fff; }
+    .member-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .member-role { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .member-subj { font-size: 0.72rem; font-weight: 600; background: var(--blue-pale); color: var(--blue-deep); padding: 0.25rem 0.65rem; border-radius: 100px; display: inline-block; }
+    .contact { background: var(--blue-deep); color: #fff; padding: 5rem 2.5rem; }
+    .contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .contact h2 { color: #fff; }
+    .contact h2 em { color: var(--yellow); }
+    .contact .lead { color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
+    .contact-info { display: flex; flex-direction: column; gap: 1rem; }
+    .ci-item { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1rem 1.25rem; }
+    .ci-icon { width:36px; height:36px; background: rgba(255,255,255,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+    .ci-label { font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+    .ci-val { font-size: 0.88rem; font-weight: 500; margin-top: 0.1rem; }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .cf-input { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 0.85rem 1.1rem; font-family: 'DM Sans',sans-serif; font-size: 0.88rem; color: #fff; transition: border-color 0.2s; width: 100%; }
+    .cf-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cf-input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
+    .cf-textarea { resize: vertical; min-height: 100px; }
+    .cf-submit { background: var(--bg); color: var(--dark); border: none; border-radius: 100px; font-family: 'DM Sans',sans-serif; font-size: 0.88rem; font-weight: 600; padding: 0.9rem 2rem; cursor: pointer; transition: background 0.2s, transform 0.15s; align-self: flex-start; }
+    .cf-submit:hover { background: var(--bg-light); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: var(--dark); color: var(--bg); padding: 2.5rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.15rem; }
+    .footer-logo span { color: var(--blue-mid); }
+    .footer-note { font-size: 0.75rem; color: rgba(232,223,192,0.3); margin-top: 0.3rem; }
+    .footer-links { display: flex; gap: 1.75rem; }
+    .footer-links button { background: none; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; font-size: 0.78rem; color: rgba(232,223,192,0.4); transition: color 0.2s; }
+    .footer-links button:hover { color: var(--bg); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .nav-inner { padding: 0 1.25rem; }
+      .nav-tabs { display: none; }
+      .hero, .about-hero-inner, .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-card, .hero-float { display: none; }
+      .hero { padding: 3rem 1.25rem; }
+      .how-grid, .subj-cards, .quotes-grid, .more-articles, .resources-grid, .values-grid, .team-grid, .tips-grid { grid-template-columns: 1fr 1fr; }
+      .news-grid { grid-template-columns: 1fr; }
+      .how, .subjects, .testimonials, .values, .team { padding: 3rem 1.25rem; }
+      .resources-grid, .resources-filter, .more-articles { padding: 0 1.25rem; }
+    }
+    @media (max-width: 600px) {
+      .how-grid, .subj-cards, .quotes-grid, .more-articles, .resources-grid, .values-grid, .team-grid, .tips-grid { grid-template-columns: 1fr; }
+      .cf-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#"><span>Harcademic</span> Tutoring</a>
+    <ul class="nav-tabs">
+      <li><button class="active" onclick="showPage('home',this)">Home</button></li>
+      <li><button onclick="showPage('news',this)">News &amp; Articles</button></li>
+      <li><button onclick="showPage('resources',this)">Resources</button></li>
+      <li><button onclick="showPage('about',this)">About Us</button></li>
+    </ul>
+    <a href="#" class="nav-cta" onclick="showPage('about',null);return false;">Join Us →</a>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <div class="hero-bg"></div>
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Free · Student-led · Peer tutoring</div>
+      <h1>Learn better,<br/><em>together.</em></h1>
+      <p class="lead">Harcademic Tutoring connects students with knowledgeable peers across every subject. Free sessions, flexible scheduling, and a community that genuinely cares.</p>
+      <div class="hero-actions">
+        <button class="btn-solid" onclick="showPage('about',null)">Find a Tutor</button>
+        <button class="btn-outline" onclick="showPage('resources',null)">Browse Resources</button>
+      </div>
+    </div>
+    <div style="position:relative">
+      <div class="hero-card">
+        <div class="hc-header"><span class="hc-title">Available sessions</span><span class="hc-live">Live now</span></div>
+        <div class="subj-grid">
+          <div class="subj-chip"><div class="chip-icon" style="background:var(--blue-pale)">📐</div><div><div class="chip-name">Calculus</div><div class="chip-level">AP / College</div></div></div>
+          <div class="subj-chip"><div class="chip-icon" style="background:var(--teal-pale)">⚗️</div><div><div class="chip-name">Chemistry</div><div class="chip-level">Honors / AP</div></div></div>
+          <div class="subj-chip"><div class="chip-icon" style="background:rgba(213,200,110,0.25)">📚</div><div><div class="chip-name">English</div><div class="chip-level">All levels</div></div></div>
+          <div class="subj-chip"><div class="chip-icon" style="background:rgba(226,122,97,0.15)">🌎</div><div><div class="chip-name">History</div><div class="chip-level">AP / IB</div></div></div>
+        </div>
+      </div>
+      <div class="hero-float"><div class="float-num">94%</div><div class="float-lbl">grade improvement rate</div></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-num">120+</div><div class="stat-lbl">Students helped this year</div></div>
+      <div class="stat-item"><div class="stat-num">18</div><div class="stat-lbl">Volunteer tutors</div></div>
+      <div class="stat-item"><div class="stat-num">9</div><div class="stat-lbl">Subjects covered</div></div>
+      <div class="stat-item"><div class="stat-num">Free</div><div class="stat-lbl">Always. No exceptions.</div></div>
+    </div>
+  </div>
+
+  <div class="how">
+    <div class="container">
+      <div class="section-tag">How it works</div>
+      <h2>Three steps to <em>clarity</em></h2>
+      <p class="lead">Getting help shouldn't be complicated. We made the process simple so you can focus on learning.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">01</div><div class="how-title">Pick your subject</div><div class="how-desc">Browse available tutors by subject, grade level, or time slot. Read their bios to find the right match.</div></div>
+      <div class="how-card"><div class="how-num">02</div><div class="how-title">Book a free session</div><div class="how-desc">Sessions happen in Google Meet, anytime for 45 minutes. Or arrange a custom time with your tutor.</div></div>
+      <div class="how-card"><div class="how-num">03</div><div class="how-title">Leave with confidence</div><div class="how-desc">Bring your questions, homework, or notes. Our tutors meet you exactly where you are — no judgment.</div></div>
+    </div>
+  </div>
+
+  <div class="subjects">
+    <div class="container">
+      <div class="section-tag">Subjects</div>
+      <h2>Whatever you're studying,<br/><em>we've got you.</em></h2>
+    </div>
+    <div class="subj-cards">
+      <div class="sc"><div class="sc-emoji">📐</div><div class="sc-title">Mathematics</div><div class="sc-desc">Algebra, Geometry, Pre-Calc, Calculus AB/BC, AP Statistics and more.</div><div class="sc-footer"><div class="sc-count">6 tutors</div><div class="sc-tag">Most popular</div></div></div>
+      <div class="sc"><div class="sc-emoji">⚗️</div><div class="sc-title">Sciences</div><div class="sc-desc">Biology, Chemistry, Physics — from Honors to AP to IB.</div><div class="sc-footer"><div class="sc-count">5 tutors</div><div class="sc-tag">High demand</div></div></div>
+      <div class="sc"><div class="sc-emoji">📚</div><div class="sc-title">English & Writing</div><div class="sc-desc">Essay structure, literary analysis, SAT writing, and college essays.</div><div class="sc-footer"><div class="sc-count">4 tutors</div><div class="sc-tag">Available</div></div></div>
+      <div class="sc"><div class="sc-emoji">🌎</div><div class="sc-title">History & Social Studies</div><div class="sc-desc">US History, World History, AP Gov, Economics, and Psychology.</div><div class="sc-footer"><div class="sc-count">3 tutors</div><div class="sc-tag">Available</div></div></div>
+      <div class="sc"><div class="sc-emoji">🗣️</div><div class="sc-title">Foreign Languages</div><div class="sc-desc">Spanish, French, Mandarin — conversation and grammar practice.</div><div class="sc-footer"><div class="sc-count">3 tutors</div><div class="sc-tag">Available</div></div></div>
+      <div class="sc"><div class="sc-emoji">💻</div><div class="sc-title">Computer Science</div><div class="sc-desc">AP CS A, Python, Java basics, and intro to algorithms.</div><div class="sc-footer"><div class="sc-count">2 tutors</div><div class="sc-tag">Available</div></div></div>
+    </div>
+  </div>
+
+  <div class="testimonials">
+    <div class="container">
+      <div class="section-tag">Student stories</div>
+      <h2>Real results, real <em>people.</em></h2>
+    </div>
+    <div class="quotes-grid">
+      <div class="qc"><div class="qc-stars">★★★★★</div><p class="qc-text">"I was failing Calc and dreading every class. After three sessions with Alex, I went from a 58 to an 87 on my next test. I actually enjoy math now."</p><div class="qc-author"><div class="qc-avatar av-blue">S</div><div><div class="qc-name">Sofia T.</div><div class="qc-grade">11th grade · AP Calc BC</div></div></div></div>
+      <div class="qc"><div class="qc-stars">★★★★★</div><p class="qc-text">"The tutors actually explain why — not just give answers. I finally understand organic chemistry instead of memorizing reactions."</p><div class="qc-author"><div class="qc-avatar av-teal">M</div><div><div class="qc-name">Marcus L.</div><div class="qc-grade">12th grade · AP Chem</div></div></div></div>
+      <div class="qc"><div class="qc-stars">★★★★★</div><p class="qc-text">"I came in with a rough draft and left with a clear structure. Got an A− — my best English grade all semester."</p><div class="qc-author"><div class="qc-avatar av-red">A</div><div><div class="qc-name">Amara J.</div><div class="qc-grade">10th grade · English Lit</div></div></div></div>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>Ready to turn things around?</em></h2>
+    <p class="lead">Join hundreds of students who found their footing with a little help from their peers. It's free. Always.</p>
+    <div class="cta-actions">
+      <button class="btn-light" onclick="showPage('about',null)">Request a Session →</button>
+      <button class="btn-ghost-w" onclick="showPage('about',null)">Become a tutor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NEWS ══ -->
+<div class="page" id="page-news">
+  <div class="news-hero">
+    <div class="news-hero-inner">
+      <div class="section-tag" style="background:rgba(213,200,110,0.2);color:var(--yellow)">Latest updates</div>
+      <h1>News &amp; <em>Articles</em></h1>
+      <p class="lead">Study tips, club announcements, academic resources, and stories from our tutoring community.</p>
+    </div>
+  </div>
+  <div class="news-grid">
+    <div class="article-featured">
+      <div class="af-banner"><span class="af-category">Club Announcement</span></div>
+      <div class="af-body">
+        <div class="af-date">March 1, 2026</div>
+        <div class="af-title">Spring Semester Sessions Are Now Open for Sign-Up</div>
+        <p class="af-excerpt">We're excited to announce expanded hours and three new tutors joining the club this spring. Sessions in calculus, AP Chemistry, and college essay writing are now bookable through our sign-up sheet in Google Meet.</p>
+        <div class="af-footer"><span class="af-author">By the Harcademic Team</span><span class="af-read">Read more →</span></div>
+      </div>
+    </div>
+    <div class="news-sidebar">
+      <div class="article-small"><div class="as-cat cat-red">Study Tips</div><div class="as-title">How to Study for AP Exams Without Burning Out</div><div class="as-date">Feb 22, 2026</div></div>
+      <div class="article-small"><div class="as-cat cat-teal">Resources</div><div class="as-title">The Best Free Tools for Math Practice in 2026</div><div class="as-date">Feb 15, 2026</div></div>
+      <div class="article-small"><div class="as-cat cat-blue">Club News</div><div class="as-title">Meet Our Newest Tutors: Three Seniors Join the Team</div><div class="as-date">Feb 8, 2026</div></div>
+    </div>
+  </div>
+  <div class="more-articles">
+    <div class="article-card"><div class="ac-color-bar bar-blue"></div><div class="ac-cat cat-blue">Study Strategy</div><div class="ac-title">The Pomodoro Technique: Does It Actually Work?</div><p class="ac-excerpt">We tested the popular time-management method with 12 students across different subjects. Here's what we found.</p><div class="ac-footer">Feb 5, 2026 · 4 min read</div></div>
+    <div class="article-card"><div class="ac-color-bar bar-red"></div><div class="ac-cat cat-red">College Prep</div><div class="ac-title">Writing a College Essay That Actually Sounds Like You</div><p class="ac-excerpt">Our English tutors share the most common mistakes students make — and how to avoid them in your personal statement.</p><div class="ac-footer">Jan 28, 2026 · 6 min read</div></div>
+    <div class="article-card"><div class="ac-color-bar bar-teal"></div><div class="ac-cat cat-teal">Peer Advice</div><div class="ac-title">What I Wish I Knew Before Taking AP Chemistry</div><p class="ac-excerpt">A senior tutor reflects on the biggest surprises of the course and how to prepare from day one.</p><div class="ac-footer">Jan 20, 2026 · 5 min read</div></div>
+  </div>
+</div>
+
+<!-- ══ RESOURCES ══ -->
+<div class="page" id="page-resources">
+  <div class="resources-hero">
+    <div class="resources-hero-inner">
+      <div class="section-tag">Free for all students</div>
+      <h1>Study <em>Resources</em></h1>
+      <p class="lead">Handouts, practice sets, video links, and guides curated by our tutors — all free, all organized by subject.</p>
+    </div>
+  </div>
+  <div class="resources-filter">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Mathematics</button>
+    <button class="filter-btn">Sciences</button>
+    <button class="filter-btn">English</button>
+    <button class="filter-btn">History</button>
+    <button class="filter-btn">Languages</button>
+    <button class="filter-btn">CS</button>
+  </div>
+  <div class="resources-grid">
+    <div class="res-card"><div class="res-icon ri-blue">📄</div><div class="res-type">PDF Worksheet</div><div class="res-title">Calculus Integration Cheat Sheet</div><div class="res-desc">Common integration rules, u-substitution steps, and worked examples for AP Calc AB & BC.</div><div class="res-footer"><span class="res-subj">Mathematics</span><a class="res-action" href="#">Download →</a></div></div>
+    <div class="res-card"><div class="res-icon ri-teal">🎥</div><div class="res-type">Video Playlist</div><div class="res-title">Organic Chemistry Reaction Overview</div><div class="res-desc">A curated playlist of 8 short videos covering the most-tested reactions in AP Chem.</div><div class="res-footer"><span class="res-subj">Chemistry</span><a class="res-action" href="#">Watch →</a></div></div>
+    <div class="res-card"><div class="res-icon ri-yellow">✍️</div><div class="res-type">Writing Guide</div><div class="res-title">The 5-Step Essay Framework</div><div class="res-desc">A clear, reusable structure for any analytical essay — from thesis to conclusion, with examples.</div><div class="res-footer"><span class="res-subj">English</span><a class="res-action" href="#">Download →</a></div></div>
+    <div class="res-card"><div class="res-icon ri-red">📊</div><div class="res-type">Practice Set</div><div class="res-title">AP Statistics: Inference Problems</div><div class="res-desc">30 practice problems on confidence intervals, hypothesis testing, and significance — with answer key.</div><div class="res-footer"><span class="res-subj">Mathematics</span><a class="res-action" href="#">Download →</a></div></div>
+    <div class="res-card"><div class="res-icon ri-blue">🗺️</div><div class="res-type">Study Guide</div><div class="res-title">AP US History Timeline (1607–1980)</div><div class="res-desc">A visual timeline of major events, key figures, and turning points — perfect for quick review.</div><div class="res-footer"><span class="res-subj">History</span><a class="res-action" href="#">Download →</a></div></div>
+    <div class="res-card"><div class="res-icon ri-teal">💬</div><div class="res-type">Flashcard Deck</div><div class="res-title">Spanish Subjunctive Triggers (400 cards)</div><div class="res-desc">Full Quizlet deck covering major subjunctive triggers with sample sentences and conjugation tables.</div><div class="res-footer"><span class="res-subj">Languages</span><a class="res-action" href="#">Open →</a></div></div>
+  </div>
+  <div class="study-tips">
+    <div class="study-tips-inner">
+      <div class="section-tag" style="background:rgba(213,200,110,0.15);color:var(--yellow)">Advice from tutors</div>
+      <h2>Study smarter, <em>not harder.</em></h2>
+      <div class="tips-grid">
+        <div class="tip-card"><div class="tip-icon">🧠</div><div class="tip-title">Spaced repetition</div><div class="tip-desc">Review material at increasing intervals rather than cramming. Apps like Anki make this automatic.</div></div>
+        <div class="tip-card"><div class="tip-icon">✍️</div><div class="tip-title">Teach it back</div><div class="tip-desc">Explain a concept out loud as if teaching someone else. If you can't, you haven't learned it yet.</div></div>
+        <div class="tip-card"><div class="tip-icon">📵</div><div class="tip-title">Single-tasking</div><div class="tip-desc">One subject per session. Phone in another room. 45 focused minutes beats 3 distracted hours.</div></div>
+        <div class="tip-card"><div class="tip-icon">❓</div><div class="tip-title">Ask early</div><div class="tip-desc">Don't wait until the night before a test. Confusion compounds — address it in the first week.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-hero-inner">
+      <div>
+        <div class="section-tag">Our story</div>
+        <h1>Built by students,<br/><em>for students.</em></h1>
+        <p class="lead">Harcademic Tutoring started in 2023 when a group of seniors realized the biggest barrier to getting help wasn't ability — it was access. So we built a free, peer-run solution inside our own school.</p>
+        <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap">
+          <button class="btn-solid" onclick="document.getElementById('contact-sec').scrollIntoView({behavior:'smooth'})">Get in touch</button>
+          <button class="btn-outline" onclick="showPage('resources',null)">See resources</button>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="mission-stat"><div class="ms-num">2025</div><div class="ms-label">Year founded</div></div>
+        <div class="mission-stat"><div class="ms-num">1</div><div class="ms-label">Years running</div></div>
+        <div class="mission-stat"><div class="ms-num">300+</div><div class="ms-label">Total students helped</div></div>
+        <div class="mission-stat"><div class="ms-num">$0</div><div class="ms-label">Cost to any student, ever</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="values">
+    <div class="values-inner">
+      <div class="section-tag">What we stand for</div>
+      <h2>Our <em>values</em></h2>
+      <div class="values-grid">
+        <div class="val-card"><div class="val-accent va-blue"></div><div class="val-title">Accessibility first</div><div class="val-desc">Academic help should never depend on what your family can afford. Every session we offer is completely free, no strings attached.</div></div>
+        <div class="val-card"><div class="val-accent va-red"></div><div class="val-title">Peer understanding</div><div class="val-desc">Students who recently learned something often explain it better than teachers. We leverage that — our tutors get it because they've been there.</div></div>
+        <div class="val-card"><div class="val-accent va-teal"></div><div class="val-title">No judgment</div><div class="val-desc">Asking for help is brave. We create a space where no question is too basic, and no student feels embarrassed for not knowing something.</div></div>
+        <div class="val-card"><div class="val-accent va-yellow"></div><div class="val-title">Community ownership</div><div class="val-desc">This club belongs to the students. Our tutors volunteer their time because they believe in the mission — and you can too.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="team">
+    <div class="team-inner">
+      <div class="section-tag">The team</div>
+      <h2>Meet our <em>tutors</em></h2>
+      <div class="team-grid">
+        <div class="member-card"><div class="member-avatar" style="background:var(--blue-deep)">A</div><div class="member-name">Nguyễn Tuệ Anh</div><div class="member-role">Student Tutor</div><div class="member-subj">Sociology</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--teal)">H</div><div class="member-name">Nguyễn Vũ Huy</div><div class="member-role">Student Tutor</div><div class="member-subj">Accelerated Maths and more</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--red)">J</div><div class="member-name">Jordan Shaw</div><div class="member-role">Events Lead</div><div class="member-subj">English</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--slate)">P</div><div class="member-name">Priya Mehta</div><div class="member-role">Tutor</div><div class="member-subj">Statistics</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--mid)">D</div><div class="member-name">Daniel Park</div><div class="member-role">Tutor</div><div class="member-subj">Physics</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--blue-mid)">L</div><div class="member-name">Lena Torres</div><div class="member-role">Tutor</div><div class="member-subj">Spanish</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--salmon)">R</div><div class="member-name">Ravi Patel</div><div class="member-role">Tutor</div><div class="member-subj">Computer Sci</div></div>
+        <div class="member-card"><div class="member-avatar" style="background:var(--teal-light)">C</div><div class="member-name">Clara Nguyen</div><div class="member-role">Tutor</div><div class="member-subj">History</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact" id="contact-sec">
+    <div class="contact-inner">
+      <div>
+        <div class="section-tag" style="background:rgba(213,200,110,0.15);color:var(--yellow)">Get in touch</div>
+        <h2>Let's start your <em>journey.</em></h2>
+        <p class="lead">Whether you need a tutor, want to become one, or just have a question — we'd love to hear from you.</p>
+        <div class="contact-info">
+          <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">Google Meet, anywhere</div></div></div>
+          <div class="ci-item"><div class="ci-icon">🕒</div><div><div class="ci-label">Session hours</div><div class="ci-val">Anytime, 45 minutes</div></div></div>
+          <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">Harcademic@gmail.com</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="contact-form">
+          <div class="cf-row">
+            <input class="cf-input" type="text" placeholder="Your name"/>
+            <input class="cf-input" type="text" placeholder="Grade level"/>
+          </div>
+          <input class="cf-input" type="email" placeholder="Email address"/>
+          <input class="cf-input" type="text" placeholder="Subject you need help with"/>
+          <textarea class="cf-input cf-textarea" placeholder="Tell us what you're struggling with…"></textarea>
+
+          <a href="mailto:harcademic@gmail.com?subject=Tutoring Inquiry">
+            <button class="cf-submit">Send Message →</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo"><span>Harcademic</span> Tutoring Club</div>
+      <div class="footer-note">Google Meet · 45 minutes · Anytime</div>
+    </div>
+    <div class="footer-links">
+      <button onclick="showPage('home',null)">Home</button>
+      <button onclick="showPage('news',null)">News</button>
+      <button onclick="showPage('resources',null)">Resources</button>
+      <button onclick="showPage('about',null)">About</button>
+    </div>
+    <div class="footer-note">© 2026 Harcademic Tutoring Club</div>
+  </div>
+</footer>
+
+<script>
+  function showPage(name, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-tabs button').forEach(b => {
+      if (b.textContent.toLowerCase().includes(name === 'home' ? 'home' : name === 'news' ? 'news' : name === 'resources' ? 'resource' : 'about')) {
+        b.classList.add('active');
+      }
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.sc,.qc,.how-card,.res-card,.member-card,.val-card,.tip-card,.article-card,.article-small,.article-featured').forEach(el => {
+    el.style.opacity='0'; el.style.transform='translateY(20px)';
+    el.style.transition='opacity 0.45s ease, transform 0.45s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
